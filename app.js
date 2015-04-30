@@ -7,7 +7,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 //Importar enrutadores
 var routes = require('./routes/index');
-var users = require('./routes/users');
+//var users = require('./routes/users');
 //Crear aplicación
 var app = express();
 
@@ -26,7 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //Instalar enrutadores y asociar rutas a sus gestores
 app.use('/', routes);
-app.use('/users', users);
+//app.use('/users', users);
 
 // Para el resto de rutas, catch 404 y se pasa el error al error handler
 app.use(function(req, res, next) {
