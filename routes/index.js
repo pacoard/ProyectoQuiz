@@ -14,6 +14,8 @@ router.get('/quizes', quizController.index);
 router.get('/quizes/:quizId(\\d+)', quizController.show);
 router.get('/quizes/:quizId(\\d+)/answer', quizController.answer);
 
+//CAJETÍN DE BÚSQUEDA: GET  /quizes?search=texto_a_buscar
+router.get('/quizes?busqueda=:busqueda(\\w)', quizController.index)
 //Comentadas estas rutas para sustituirlas por la lista de preguntas
 //router.get('/quizes/question', quizController.question);
 //router.get('/quizes/answer', quizController.answer);

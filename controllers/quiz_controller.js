@@ -2,18 +2,20 @@
 var models = require('../models/models.js'); //para acceder a la BBDD,
 //ya que el módulo models.js exporta "Quiz"
 
-/*
-//Get quizes/question
-exports.question = function(req,res) {
-	models.Quiz.findAll().then(function (quiz) {
-		res.render('quizes/question', {pregunta: quiz[0].pregunta});
-	})
-};*/
 //Get /quizes
 exports.index = function(req,res) {
-	models.Quiz.findAll().then(function (quizes) {
-		res.render('quizes/index', {quizes: quizes});
-	})
+	if (req.query.busqueda != null) {
+		var search = req.query.busqueda+'%';
+		models.Quiz.findAll({where: ["pregunta like ?", search]})
+		.then(function (quizes) {
+			res.render('quizes/index', {quizes: quizes});
+		});
+	}
+	else {
+		models.Quiz.findAll().then(function (quizes) {
+			res.render('quizes/index', {quizes: quizes});
+		});
+	}
 };
 //Get /quizes/:id
 exports.show = function(req,res) { //para la lista de preguntas
