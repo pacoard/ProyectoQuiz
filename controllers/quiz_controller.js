@@ -28,21 +28,8 @@ exports.index = function(req,res) {
 };
 //Get /quizes/:id
 exports.show = function(req,res) { //para la lista de preguntas
-	//models.Quiz.find(req.params.quizId).then(function (quiz) {
-	//	res.render('quizes/show', {quiz: quiz});
-	//})
 	res.render('quizes/show', { quiz: req.quiz} );
 };
-
-//Get quizes/answer
-/*exports.answer = function(req,res) {
-	models.Quiz.find(req.params.quizId).then(function (quiz) {
-		if (req.query.respuesta === quiz.respuesta)
-			res.render('quizes/answer', {respuesta: 'Correcto', quizId: req.params.quizId});
-		else 
-			res.render('quizes/answer', {respuesta: 'Incorrecto', quizId: req.params.quizId});
-	})
-};*/
 
 exports.answer = function(req,res) {
 	if (req.query.respuesta === req.quiz.respuesta)
