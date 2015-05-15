@@ -17,6 +17,16 @@ exports.index = function(req,res) {
 		var search = '%'+req.query.busqueda+'%'; //para buscar palabras intermedias
 		models.Quiz.findAll({where: ["pregunta like ?", search]})
 		.then(function (quizes) {
+			//ordenar alfabéticamente
+			var i, aux;
+			for (i=1; i<quizes.length; i++) {
+				if (quizes[i].pregunta < quizes[i-1].pregunta) {
+					aux = quizes[i-1];
+					quizes[i-1]=quizes[i];
+					quizes[i]=aux;
+				}
+			}
+			//mostrar lista
 			res.render('quizes/index', {quizes: quizes});
 		});
 	}
@@ -36,4 +46,24 @@ exports.answer = function(req,res) {
 		res.render('quizes/answer', {respuesta: 'Correcto', quizId: req.quiz.id});
 		
 	else res.render('quizes/answer', {respuesta: 'Incorrecto', quizId: req.quiz.id});
+};
+
+//Get /quizes/new -----para crear preguntas
+exports.new = function(req,res) {
+	//Se crea e inicializa una fila en la base de datos
+	var  quiz = models.Quiz.build(
+		{pregunta: "Pregunta", respuesta: "Respuesta"}
+	);
+
+	res.render('quizes/new', {quiz: quiz});
+};
+
+//Post /quizes/create
+exports.create = function(req,res) {
+	//Se crea e inicializa una fila en la base de datos
+	var  quiz = models.Quiz.build(req.body.quiz);
+	//Guardar en la BBDD pregunta y respuesta del quiz
+	quiz.save({fields: ["pregunta", "respuesta"]}).then(function() {
+		res.redirect('/quizes'); //redirige a la lista de preguntas
+	});
 };
