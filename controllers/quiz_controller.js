@@ -27,25 +27,25 @@ exports.index = function(req,res) {
 				}
 			}
 			//mostrar lista
-			res.render('quizes/index', {quizes: quizes});
-		});
+			res.render('quizes/index', {quizes: quizes, errors: []});
+		}).catch(function(error){next(error)});
 	}
 	else {
 		models.Quiz.findAll().then(function (quizes) {
-			res.render('quizes/index', {quizes: quizes});
-		});
+			res.render('quizes/index', {quizes: quizes, errors: []});
+		}).catch(function(error){next(error)});
 	}
 };
 //Get /quizes/:id
 exports.show = function(req,res) { //para la lista de preguntas
-	res.render('quizes/show', { quiz: req.quiz} );
+	res.render('quizes/show', { quiz: req.quiz, errors: []} );
 };
 
 exports.answer = function(req,res) {
 	if (req.query.respuesta === req.quiz.respuesta)
-		res.render('quizes/answer', {respuesta: 'Correcto', quizId: req.quiz.id});
+		res.render('quizes/answer', {respuesta: 'Correcto', quizId: req.quiz.id, errors: []});
 		
-	else res.render('quizes/answer', {respuesta: 'Incorrecto', quizId: req.quiz.id});
+	else res.render('quizes/answer', {respuesta: 'Incorrecto', quizId: req.quiz.id, errors: []});
 };
 
 //Get /quizes/new -----para crear preguntas
@@ -55,15 +55,20 @@ exports.new = function(req,res) {
 		{pregunta: "Pregunta", respuesta: "Respuesta"}
 	);
 
-	res.render('quizes/new', {quiz: quiz});
+	res.render('quizes/new', {quiz: quiz, errors: []});
 };
 
 //Post /quizes/create
 exports.create = function(req,res) {
 	//Se crea e inicializa una fila en la base de datos
 	var  quiz = models.Quiz.build(req.body.quiz);
-	//Guardar en la BBDD pregunta y respuesta del quiz
-	quiz.save({fields: ["pregunta", "respuesta"]}).then(function() {
-		res.redirect('/quizes'); //redirige a la lista de preguntas
-	});
+	quiz.validate().then(function(err) {
+		if (err) res.render('quizes/new', {quiz: quiz, errors: err.errors});
+		else {
+			//Guardar en la BBDD pregunta y respuesta del quiz
+			quiz.save({fields: ["pregunta", "respuesta"]}).then(function() {
+				res.redirect('/quizes')}) //redirige a la lista de preguntas
+		}
+		}
+	);	
 };
