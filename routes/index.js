@@ -21,6 +21,11 @@ router.get('/quizes/:quizId(\\d+)/answer', quizController.answer);
 router.get('/quizes/new', quizController.new);
 router.post('/quizes/create', quizController.create);
 
+//Para editar preguntas
+router.get('/quizes/:quizId(\\d+)/edit', quizController.edit);
+router.put('/quizes/:quizId(\\d+)', quizController.update);
+
+
 //CAJETÍN DE BÚSQUEDA: GET  /quizes?search=texto_a_buscar
 router.get('/quizes?busqueda=:busqueda(\\w)', quizController.index);
 

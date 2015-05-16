@@ -7,6 +7,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var partials = require('express-partials');
+var methodOverride = require('method-override');
 
 //Importar enrutadores
 var routes = require('./routes/index');
@@ -27,6 +28,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded()); //ahora se parsea bien
 app.use(cookieParser());
+app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 //Instalar enrutadores y asociar rutas a sus gestores
