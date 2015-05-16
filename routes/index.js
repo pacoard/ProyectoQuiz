@@ -1,8 +1,10 @@
 var express = require('express');
 var router = express.Router();
 
+// Referencias a los controladores, para poder llamar a las funciones
+// que exportan
 var quizController = require('../controllers/quiz_controller');
-
+var commentController = require('../controllers/comment_controller');
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -29,9 +31,13 @@ router.delete('/quizes/:quizId(\\d+)', quizController.destroy);
 //CAJETÍN DE BÚSQUEDA: GET  /quizes?search=texto_a_buscar
 router.get('/quizes?busqueda=:busqueda(\\w)', quizController.index);
 
+//Para crear y ver comentarios
+router.get('/quizes/:quizId(\\d+)/comments/new', commentController.new);
+router.post('/quizes/:quizId(\\d+)/comments', commentController.create);
+
 //Página del autor
 router.get('/author', function(req, res) {
-  res.render('author');
+  res.render('author', {errors: []});
 });
 
 module.exports = router;

@@ -1,12 +1,14 @@
-//Modificado para soportar BBDD
+
 var models = require('../models/models.js'); //para acceder a la BBDD,
 //ya que el módulo models.js exporta "Quiz"
 
 //Quiz 10: Autoload. Factoriza el código si la ruta incluye :quizId
 exports.load = function(req,res,next,quizId) {
-	models.Quiz.find(quizId).then( 
-		function(quiz) {
-			if (quiz) { req.quiz = quiz; next(); }
+	models.Quiz.find({
+			where: { id: Number(quizId) },
+			include: [{ model: models.Comment }]
+		}).then(function(quiz) {
+			if (quiz) {req.quiz = quiz; next();}
 			else next(new Error('No existe el quiz con ID='+quizId));
 		}).catch(function(error) { next(error);});
 };
