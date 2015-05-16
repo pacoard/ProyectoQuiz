@@ -14,13 +14,14 @@ router.get('/', function(req, res) {
 
 //Autoload: gestión de comandos con :quizId
 router.param('quizId', quizController.load);
+router.param('commentId', commentController.load); //para :commentId
 
 //Rutas de sesión
 router.get('/login', sessionController.new); //formulario
 router.post('/login', sessionController.create); //crear sesión
 router.get('/logout', sessionController.destroy); //salir de la sesión
 
-//Rutas nuevas, para la lista de preguntas
+//Rutas para las preguntas
 router.get('/quizes', quizController.index);
 router.get('/quizes/:quizId(\\d+)', quizController.show);
 router.get('/quizes/:quizId(\\d+)/answer', quizController.answer);
@@ -38,7 +39,8 @@ router.get('/quizes?busqueda=:busqueda(\\w)', quizController.index);
 //Para crear y ver comentarios
 router.get('/quizes/:quizId(\\d+)/comments/new', commentController.new);
 router.post('/quizes/:quizId(\\d+)/comments', commentController.create);
-
+router.get('/quizes/:quizId(\\d+)/comments/:commentId(\\d+)/publish',
+			 sessionController.loginRequired, commentController.publish);
 //Página del autor
 router.get('/author', function(req, res) {
   res.render('author', {errors: []});
