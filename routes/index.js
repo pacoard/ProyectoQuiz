@@ -24,7 +24,7 @@ router.post('/quizes/create', quizController.create);
 //Para editar preguntas
 router.get('/quizes/:quizId(\\d+)/edit', quizController.edit);
 router.put('/quizes/:quizId(\\d+)', quizController.update);
-
+router.delete('/quizes/:quizId(\\d+)', quizController.destroy);
 
 //CAJETÍN DE BÚSQUEDA: GET  /quizes?search=texto_a_buscar
 router.get('/quizes?busqueda=:busqueda(\\w)', quizController.index);
