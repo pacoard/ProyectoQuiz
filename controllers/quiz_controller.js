@@ -14,6 +14,30 @@ exports.load = function(req,res,next,quizId) {
 };
 
 //Get /quizes
+/*exports.index = function(req,res) {
+	if (req.query.busqueda != null) {
+		var search = '%'+req.query.busqueda+'%'; //para buscar palabras intermedias
+		models.Quiz.findAll({where: ["pregunta like ?", search]})
+		.then(function (quizes) {
+			//ordenar alfabéticamente
+			var i, aux;
+			for (i=1; i<quizes.length; i++) {
+				if (quizes[i].pregunta < quizes[i-1].pregunta) {
+					aux = quizes[i-1];
+					quizes[i-1]=quizes[i];
+					quizes[i]=aux;
+				}
+			}
+			//mostrar lista
+			res.render('quizes/index', {quizes: quizes, errors: []});
+		}).catch(function(error) {next(error)});
+	}
+	else {
+		models.Quiz.findAll().then(function (quizes) {
+			res.render('quizes/index', {quizes: quizes, errors: []});
+		}).catch(function(error) {next(error)});
+	}
+};*/
 exports.index = function(req,res) {
 	if (req.query.busqueda != null) {
 		var search = '%'+req.query.busqueda+'%'; //para buscar palabras intermedias
@@ -30,12 +54,12 @@ exports.index = function(req,res) {
 			}
 			//mostrar lista
 			res.render('quizes/index', {quizes: quizes, errors: []});
-		}).catch(function(error){next(error)});
+		}).catch(function(error) {next(error)});
 	}
 	else {
 		models.Quiz.findAll().then(function (quizes) {
 			res.render('quizes/index', {quizes: quizes, errors: []});
-		}).catch(function(error){next(error)});
+		}).catch(function(error) {next(error)});
 	}
 };
 //Get /quizes/:id
@@ -63,16 +87,18 @@ exports.new = function(req,res) {
 //Post /quizes/create
 exports.create = function(req,res) {
 	//Se crea e inicializa una fila en la base de datos
-	var  quiz = models.Quiz.build(req.body.quiz);
+	req.body.quiz.UserId = req.session.user.id;
+	var quiz = models.Quiz.build(req.body.quiz);
+
 	quiz.validate().then(function(err) {
 		if (err) res.render('quizes/new', {quiz: quiz, errors: err.errors});
 		else {
 			//Guardar en la BBDD pregunta y respuesta del quiz
-			quiz.save({fields: ["pregunta", "respuesta"]}).then(function() {
+			quiz.save({fields: ["pregunta", "respuesta", "UserId"]})
+			.then(function() {
 				res.redirect('/quizes')}) //redirige a la lista de preguntas
 		}
-		}
-	);	
+	}).catch(function(error) {next(error)});	
 };
 
 exports.edit = function(req,res) {

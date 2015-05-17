@@ -34,27 +34,43 @@ var Quiz = sequelize.import(path.join(__dirname, 'quiz'));
 //Importar la definición de la tabla Comment en comment.js
 var Comment = sequelize.import(path.join(__dirname,'comment'));
 
-//Definición de la relación 1 a N entre Quiz y Comment:
-//cada quiz puede tener N comentarios
+//Importar la definición de la tabla User en user.js
+var User = sequelize.import(path.join(__dirname, 'user'))
+
+//---------------------------------------------------------
+//Cada User tendrá N Quizes, y cada Quiz tendrá N Comments
 Comment.belongsTo(Quiz);
 Quiz.hasMany(Comment);
+Quiz.belongsTo(User);
+User.hasMany(Quiz);
+//---------------------------------------------------------
 
 exports.Quiz = Quiz; //exportar la definición de tabla Quiz
 //se exporta para que la definición de la tabla Quiz pueda ser
 //usada en quiz_controller.js
 exports.Comment = Comment;
 
-//Crear e inicializar tabla de preguntas en DB
+exports.User = User;
+
+//Crear e inicializar la BBDD
 sequelize.sync().then(function() {
-	Quiz.count().then(function (count) {
-		if (count === 0) { //inicializar tabla si estaba vacía
-			Quiz.create({ pregunta: 'Capital de Italia',
-						  respuesta: 'Roma'
-						});
-			Quiz.create({ pregunta: 'Capital de Portugal',
-						  respuesta: 'Lisboa'
-						})
-			.then(function(){console.log('BBDD inicializada')});
+	User.count().then(function (count){
+		if(count === 0) { 
+			User.bulkCreate(
+				[ {username: 'admin', password: '1234', isAdmin: true},
+				  {username: 'paco', password: '5678'} // isAdmin = false por defecto
+				]).then(function(){
+					console.log('BBDD inicializada');
+					Quiz.count().then(function (count){
+						if(count === 0) {
+							Quiz.bulkCreate(
+								[ {pregunta: 'Capital de Italia', respuesta: 'Roma', UserId: 2}, // pertenecerán al usuario 2 (paco)
+								  {pregunta: 'Capital de Portugal', respuesta: 'Lisboa', UserId: 2}
+								]).then(function(){
+									console.log('BBDD inicializada')});
+						};
+					});
+				});
 		};
 	});
 });
