@@ -10,8 +10,15 @@
 
 <p>
 
+<label for="image" class="rem">Imagen:</label>
+	<input type="file" id="image" accept="image/*" name="image" 
+			value="<%= quiz.respuesta %>"/> 
+
+<p>
+
+
 	<a href="/quizes"> 
 		<button type="button">Cancelar</button>
 	</a>
-	
+
 	<input type="submit" value="Guardar">

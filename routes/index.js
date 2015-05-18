@@ -1,4 +1,5 @@
 var express = require('express');
+var multer = require('multer');
 var router = express.Router();
 
 // Referencias a los controladores, para poder llamar a las funciones
@@ -36,10 +37,12 @@ router.get('/quizes', quizController.index);
 router.get('/quizes/:quizId(\\d+)', quizController.show);
 router.get('/quizes/:quizId(\\d+)/answer', quizController.answer);
 router.get('/quizes/new', sessionController.loginRequired, quizController.new);
-router.post('/quizes/create', sessionController.loginRequired, quizController.create);
+router.post('/quizes/create', sessionController.loginRequired,
+							multer({ dest: './public/media/'}), quizController.create);
 router.get('/quizes/:quizId(\\d+)/edit',sessionController.loginRequired, quizController.ownershipRequired,  quizController.edit);
 router.put('/quizes/:quizId(\\d+)', sessionController.loginRequired, quizController.ownershipRequired, quizController.update);
-router.delete('/quizes/:quizId(\\d+)', sessionController.loginRequired, quizController.ownershipRequired, quizController.destroy);
+router.delete('/quizes/:quizId(\\d+)', sessionController.loginRequired, quizController.ownershipRequired,
+									multer({ dest: './public/media/'}), quizController.destroy);
 
 //CAJETÍN DE BÚSQUEDA: GET  /quizes?search=texto_a_buscar
 router.get('/quizes?busqueda=:busqueda(\\w)', quizController.index);

@@ -76,13 +76,17 @@ exports.new = function(req,res) {
 exports.create = function(req,res) {
 	//Se crea e inicializa una fila en la base de datos
 	req.body.quiz.UserId = req.session.user.id;
+	
+	if(req.files.image)
+		req.body.quiz.image = req.files.image.name;
+
 	var quiz = models.Quiz.build(req.body.quiz);
 
 	quiz.validate().then(function(err) {
 		if (err) res.render('quizes/new', {quiz: quiz, errors: err.errors});
 		else {
 			//Guardar en la BBDD pregunta y respuesta del quiz
-			quiz.save({fields: ["pregunta", "respuesta", "UserId"]})
+			quiz.save({fields: ["pregunta", "respuesta", "UserId", "image"]})
 			.then(function() {
 				res.redirect('/quizes')}) //redirige a la lista de preguntas
 		}
@@ -95,6 +99,9 @@ exports.edit = function(req,res) {
 };
 
 exports.update = function(req, res) {
+	if(req.files.image)
+		req.body.quiz.image = req.files.image.name;
+
 	req.quiz.pregunta = req.body.quiz.pregunta;
 	req.quiz.respuesta = req.body.quiz.respuesta;
 	
@@ -103,7 +110,7 @@ exports.update = function(req, res) {
 			res.render('quizes/edit', {quiz: req.quiz, errors: err.errors});
 		else {
 			req.quiz // save: guarda campos pregunta y respuesta en DB
-			.save( {fields: ["pregunta", "respuesta"]})
+			.save( {fields: ["pregunta", "respuesta", "imagesu"]})
 			.then( function(){ res.redirect('/quizes');});
 		} // Redirección HTTP a lista de preguntas (URL relativo)
 	}).catch(function(error){next(error)});
