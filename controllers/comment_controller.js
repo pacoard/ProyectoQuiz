@@ -2,6 +2,25 @@
 var models = require('../models/models.js'); //para acceder a la BBDD,
 //ya que el módulo models.js exporta "Quiz"
 
+//Quiz 22: autorización para editar quiz (si éste pertenece al usuario, o si el usuario es admin)
+exports.ownershipRequired =  function(req,res,next) {
+	models.Quiz.find({where: {id: Number(req.comment.QuizId)}})
+	.then(function(quiz) {
+		if (quiz) {
+			var objQuizOwner = req.quiz.UserId; //id de usuario propietario del quiz
+			var logUser = req.session.user.id; //id de usuario que intenta editar el quiz
+			var isAdmin = req.session.user.isAdmin; //booleano para ver si el usuario es el admin
+
+			if (isAdmin || objQuizOwner === logUser)
+				next();
+			else
+				res.redirect('/');
+		}
+		else next(new Error('No existe quizId = '+quizId));
+	}).catch(function(error) { next(error);});
+
+};
+
 //Autoload de comentarios: verifica si existe el commentId
 exports.load = function(req,res,next,commentId) {
 	models.Comment.find({

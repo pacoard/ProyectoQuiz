@@ -8,13 +8,13 @@
 
 <table>
 	
-	<% 
-		for (i=0; i<quizes.length; i++) { %>
+	<%	for (var i=0; i<quizes.length; i++) { %>
 			<tr>
 				<td><a href="quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a>
 				</td>
 				<!-- Sólo con autorización -->
-				<% if (session.user) { %>
+				<% if(session.user) {
+				   if (session.user.isAdmin || session.user.id === quizes[i].UserId) { %>
 					<td><a href="quizes/<%= quizes[i].id %>/edit">
 						<button>editar</button></a>
 					</td>
@@ -26,10 +26,12 @@
 				<% } %>
 				<!-- ///////////////////// -->
 			</tr>
+		<% } %>
 	<% } %>
 
 </table>
 <p>
+
 <!-- Sólo con autorización -->
 <% if (session.user) { %>
 	<a href="/quizes/new"><button type="button">Crear pregunta</button></a>

@@ -2,6 +2,18 @@
 var models = require('../models/models.js'); //para acceder a la BBDD,
 //ya que el módulo models.js exporta "Quiz"
 
+//Quiz 22: autorización para editar quiz (si éste pertenece al usuario, o si el usuario es admin)
+exports.ownershipRequired =  function(req,res,next) {
+	var objQuizOwner = req.quiz.UserId; //id de usuario propietario del quiz
+	var logUser = req.session.user.id; //id de usuario que intenta editar el quiz
+	var isAdmin = req.session.user.isAdmin; //booleano para ver si el usuario es el admin
+
+	if (isAdmin || objQuizOwner === logUser)
+		next();
+	else
+		res.redirect('/');
+};
+
 //Quiz 10: Autoload. Factoriza el código si la ruta incluye :quizId
 exports.load = function(req,res,next,quizId) {
 	models.Quiz.find({
@@ -14,30 +26,6 @@ exports.load = function(req,res,next,quizId) {
 };
 
 //Get /quizes
-/*exports.index = function(req,res) {
-	if (req.query.busqueda != null) {
-		var search = '%'+req.query.busqueda+'%'; //para buscar palabras intermedias
-		models.Quiz.findAll({where: ["pregunta like ?", search]})
-		.then(function (quizes) {
-			//ordenar alfabéticamente
-			var i, aux;
-			for (i=1; i<quizes.length; i++) {
-				if (quizes[i].pregunta < quizes[i-1].pregunta) {
-					aux = quizes[i-1];
-					quizes[i-1]=quizes[i];
-					quizes[i]=aux;
-				}
-			}
-			//mostrar lista
-			res.render('quizes/index', {quizes: quizes, errors: []});
-		}).catch(function(error) {next(error)});
-	}
-	else {
-		models.Quiz.findAll().then(function (quizes) {
-			res.render('quizes/index', {quizes: quizes, errors: []});
-		}).catch(function(error) {next(error)});
-	}
-};*/
 exports.index = function(req,res) {
 	if (req.query.busqueda != null) {
 		var search = '%'+req.query.busqueda+'%'; //para buscar palabras intermedias

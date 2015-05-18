@@ -1,16 +1,18 @@
 //Controlador para los usuarios
 var models = require('../models/models.js');
-// MW que permite acciones solamente si el usuario objeto corresponde con el usuario logeado o si es cuenta admin
-exports.ownershipRequired = function(req, res, next){
-var objUser = req.user.id;
-var logUser = req.session.user.id;
-var isAdmin = req.session.user.isAdmin;
-if (isAdmin || objUser === logUser) {
-next();
-} else {
-res.redirect('/');
-}
+
+//Quiz 22: autorización para editar quiz (si éste pertenece al usuario, o si el usuario es admin)
+exports.ownershipRequired =  function(req,res,next) {
+	var objUser = req.user.id; //id de usuario propietario del quiz
+	var logUser = req.session.user.id; //id de usuario que intenta editar el quiz
+	var isAdmin = req.session.user.isAdmin; //booleano para ver si el usuario es el admin
+
+	if (isAdmin || objUser === logUser)
+		next();
+	else
+		res.redirect('/');
 };
+
 // Autoload :id
 exports.load = function(req, res, next, userId) {
 	models.User.find({where: {id: Number(userId)}})
