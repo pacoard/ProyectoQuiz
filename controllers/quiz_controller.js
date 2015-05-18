@@ -25,7 +25,7 @@ exports.load = function(req,res,next,quizId) {
 		}).catch(function(error) { next(error);});
 };
 
-//Get /quizes
+//Get /quizes y /users/:userId/quizes
 exports.index = function(req,res) {
 	if (req.query.busqueda != null) {
 		var search = '%'+req.query.busqueda+'%'; //para buscar palabras intermedias
@@ -45,8 +45,11 @@ exports.index = function(req,res) {
 		}).catch(function(error) {next(error)});
 	}
 	else {
-		models.Quiz.findAll().then(function (quizes) {
-			res.render('quizes/index', {quizes: quizes, errors: []});
+		var options = {};
+		if (req.user) options.where = {UserId: req.user.id};
+
+		models.Quiz.findAll(options).then(function (quizes) {
+			res.render('quizes/index.ejs', {quizes: quizes, errors: []});
 		}).catch(function(error) {next(error)});
 	}
 };
