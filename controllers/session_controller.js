@@ -1,4 +1,25 @@
+//Autologout
+exports.sessionExpired = function(req,res,next) {
+	var date = new Date();
+	var diferencia = date.getSeconds() - req.session.time; 
+	if(diferencia >= 10) {
+		delete req.session.user;
+		res.redirect(req.session.redir.toString());
+	}
+	else {
+		req.session.time = date.getSeconds();
+		next();
+	}
+};
+
 //AUTORIZACIÓN
+
+//Contador de sesión
+exports.tiempo = function(next) {
+	var date = new Date();
+	return date.getSeconds();
+}
+
 exports.loginRequired = function(req,res,next) {
 	if (req.session.user) next();
 	else res.redirect('/login');
@@ -26,6 +47,8 @@ exports.create = function(req, res) {
 		// Crear req.session.user y guardar campos id y username
 		// La sesión se define por la existencia de: req.session.user
 		req.session.user = {id: user.id, username: user.username, isAdmin: user.isAdmin};
+		var date = new Date();
+		req.session.time = date.getSeconds();
 		res.redirect(req.session.redir.toString());// redirección a path anterior a login
 	});
 };

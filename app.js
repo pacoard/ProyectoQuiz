@@ -33,6 +33,14 @@ app.use(session());
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+//Middleware para autologout
+/*app.use(function(req,res,next) {
+    var date = new Date();
+    var seconds = date.getSeconds();
+
+});
+*/
 //Autenticación y sesión
 app.use(function(req,res,next) {
     //si no existe la redireción, se inicializa a /
