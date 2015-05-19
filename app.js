@@ -35,12 +35,26 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 //Middleware para autologout
-/*app.use(function(req,res,next) {
-    var date = new Date();
-    var seconds = date.getSeconds();
-
+app.use(function(req,res,next) {
+    if (req.session.user) {
+        var date = new Date();
+        var diferenciaMin = date.getMinutes() - req.session.minutes; 
+        var diferenciaSec = date.getSeconds() - req.session.seconds; 
+        //Se excede el timempo límite
+        if(diferenciaSec >= 10 || diferenciaMin !==0) {
+            delete req.session.user;
+            res.redirect(req.session.redir.toString());
+        }
+        else {
+            //Reinicio de contadores al hacer nueva transacción HTTP
+            req.session.seconds = date.getSeconds();
+            req.session.minutes = date.getMinutes();
+            next();
+        }
+    }
+    else next();
 });
-*/
+
 //Autenticación y sesión
 app.use(function(req,res,next) {
     //si no existe la redireción, se inicializa a /

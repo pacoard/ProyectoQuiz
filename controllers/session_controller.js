@@ -1,24 +1,25 @@
 //Autologout
-exports.sessionExpired = function(req,res,next) {
-	var date = new Date();
-	var diferencia = date.getSeconds() - req.session.time; 
-	if(diferencia >= 10) {
-		delete req.session.user;
-		res.redirect(req.session.redir.toString());
+/*exports.sessionExpired = function(req,res,next) {
+	if (req.session) {
+		var date = new Date();
+		var diferenciaMin = date.getMinutes() - req.session.minutes; 
+		var diferenciaSec = date.getSeconds() - req.session.seconds; 
+		//Se excede el timempo límite
+		if(diferenciaSec >= 10 || diferenciaMin !==0) {
+			delete req.session.user;
+			res.redirect(req.session.redir.toString());
+		}
+		else {
+			//Reinicio de contadores al hacer nueva transacción HTTP
+			req.session.seconds = date.getSeconds();
+			req.session.minutes = date.getMinutes();
+			next();
+		}
 	}
-	else {
-		req.session.time = date.getSeconds();
-		next();
-	}
+	else next();
 };
-
+*/
 //AUTORIZACIÓN
-
-//Contador de sesión
-exports.tiempo = function(next) {
-	var date = new Date();
-	return date.getSeconds();
-}
 
 exports.loginRequired = function(req,res,next) {
 	if (req.session.user) next();
@@ -47,8 +48,11 @@ exports.create = function(req, res) {
 		// Crear req.session.user y guardar campos id y username
 		// La sesión se define por la existencia de: req.session.user
 		req.session.user = {id: user.id, username: user.username, isAdmin: user.isAdmin};
+		
 		var date = new Date();
-		req.session.time = date.getSeconds();
+		req.session.seconds = date.getSeconds();
+		req.session.minutes = date.getMinutes();
+		
 		res.redirect(req.session.redir.toString());// redirección a path anterior a login
 	});
 };
