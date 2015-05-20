@@ -1,26 +1,5 @@
-//Autologout
-/*exports.sessionExpired = function(req,res,next) {
-	if (req.session) {
-		var date = new Date();
-		var diferenciaMin = date.getMinutes() - req.session.minutes; 
-		var diferenciaSec = date.getSeconds() - req.session.seconds; 
-		//Se excede el timempo límite
-		if(diferenciaSec >= 10 || diferenciaMin !==0) {
-			delete req.session.user;
-			res.redirect(req.session.redir.toString());
-		}
-		else {
-			//Reinicio de contadores al hacer nueva transacción HTTP
-			req.session.seconds = date.getSeconds();
-			req.session.minutes = date.getMinutes();
-			next();
-		}
-	}
-	else next();
-};
-*/
-//AUTORIZACIÓN
 
+//AUTORIZACIÓN
 exports.loginRequired = function(req,res,next) {
 	if (req.session.user) next();
 	else res.redirect('/login');

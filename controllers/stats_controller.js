@@ -1,61 +1,43 @@
 
 var models = require('../models/models.js'); //para acceder a la BBDD,
 //ya que el módulo models.js exporta todas las tablas de la BBDD
+// Se importa de models.js: Quiz, Comment y User
 
-//Quiz 22: autorización para editar quiz (si éste pertenece al usuario, o si el usuario es admin)
-exports.ownershipRequired =  function(req,res,next) {
-	models.Quiz.find({where: {id: Number(req.comment.QuizId)}})
-	.then(function(quiz) {
-		if (quiz) {
-			var objQuizOwner = req.quiz.UserId; //id de usuario propietario del quiz
-			var logUser = req.session.user.id; //id de usuario que intenta editar el quiz
-			var isAdmin = req.session.user.isAdmin; //booleano para ver si el usuario es el admin
+//Cálculo de las estadísticas
+exports.cargar = function(req,res) {
+	
+	models.Quiz.findAll().then(function (quizes){
+		models.Comment.findAll().then(function (comments) {
+			var nPreguntas = 0, 
+				nComments = 0, 
+				nMedioComments = 0, 
+				nPreguntasSinComments = 0, 
+				nPreguntasConComments = 0;
 
-			if (isAdmin || objQuizOwner === logUser)
-				next();
-			else
-				res.redirect('/');
-		}
-		else next(new Error('No existe quizId = '+quizId));
-	}).catch(function(error) { next(error);});
-};
+			nComments = comments.length;
+			nPreguntas = quizes.length;
+			nMedioComments = nComments/nPreguntas;
 
-//Autoload de comentarios: verifica si existe el commentId
-exports.load = function(req,res,next,commentId) {
-	models.Comment.find({
-			where: { id: Number(commentId) }
-		}).then(function(comment) {
-			if (comment) {req.comment = comment; next();}
-			else next(new Error('No existe el comentario con ID='+commentId));
-		}).catch(function(error) { next(error);});
-};
+			for (var i=1; i<=nPreguntas; i++) {
+				for (var j=0; j<nComments; j++) {
+					if (comments[j].QuizId === i) {
+						nPreguntasConComments++;
+						break;
+					}
+				}
+			}
+			nPreguntasSinComments = nPreguntas - nPreguntasConComments;
 
-//Get quizes/:quizId/comments/new
-exports.new = function(req,res) {
-	res.render('comments/new.ejs', { quizId: req.quiz.id, errors: []} );
-};
-
-//Post /quizes/:quizId/comments
-exports.create = function(req,res) {
-	var comment = models.Comment.build(
-		{ texto: req.body.comment.texto,
-		  QuizId: req.params.quizId
+			res.render('quizes/stats', {
+						nPreguntas: nPreguntas, 
+						nComments: nComments,
+						nMedioComments: nMedioComments,
+						nPreguntasSinComments: nPreguntasSinComments,
+						nPreguntasConComments: nPreguntasConComments,
+						errors: []
+					});
 		});
-	comment.validate().then(function(err) {
-		if (err) res.render('comments/new.ejs', {comment: comment, errors: err.errors});
-		else { //Se guarda el comentario en la BBDD
-			comment.save().then(function(){
-				res.redirect('/quizes/'+req.params.quizId);
-			});
-		}	
-	}).catch(function(error){next(error)});
-};
+	});
 
-//Get quizes/:quizId/comments/:commentId/publish - si autoload redirige aquí
-exports.publish  = function(req,res) {
-	req.comment.publicado = true;
-	req.comment.save( {fields: ["publicado"]})
-		.then( function() {
-			res.redirect('/quizes/'+req.params.quizId);
-		}).catch(function(error) {next(error)});
+
 };

@@ -56,5 +56,9 @@ router.get('/quizes/:quizId(\\d+)/comments/:commentId(\\d+)/publish',
 router.get('/author', function(req, res) {
   res.render('author', {errors: []});
 });
+//Página de estadísticas
+var statsController = require('../controllers/stats_controller');
+router.get('/quizes/statistics', statsController.cargar);
+
 
 module.exports = router;
