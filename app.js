@@ -39,16 +39,16 @@ app.use(function(req,res,next) {
     if (req.session.user) {
         var date = new Date();
         var diferenciaMin = date.getMinutes() - req.session.minutes; 
-        var diferenciaSec = date.getSeconds() - req.session.seconds; 
+        //var diferenciaSec = date.getSeconds() - req.session.seconds; 
         //Se excede el timempo límite
-        if(diferenciaSec >= 10 || diferenciaMin !==0) {
+        if(diferenciaMin >= 2) {
             delete req.session.user;
             res.redirect(req.session.redir.toString());
         }
         else {
             //Reinicio de contadores al hacer nueva transacción HTTP
             req.session.seconds = date.getSeconds();
-            req.session.minutes = date.getMinutes();
+            //req.session.minutes = date.getMinutes();
             next();
         }
     }
