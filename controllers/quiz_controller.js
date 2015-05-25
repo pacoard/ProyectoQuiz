@@ -26,7 +26,7 @@ exports.load = function(req,res,next,quizId) {
 };
 
 //Get /quizes y /users/:userId/quizes
-exports.index = function(req,res) {
+exports.index = function(req,res, next) {
 	if (req.query.busqueda != null) {
 		var search = '%'+req.query.busqueda+'%'; //para buscar palabras intermedias
 		models.Quiz.findAll({where: ["pregunta like ?", search]})
@@ -40,8 +40,18 @@ exports.index = function(req,res) {
 					quizes[i]=aux;
 				}
 			}
-			//mostrar lista
-			res.render('quizes/index', {quizes: quizes, errors: []});
+			//Comprobar si hay favoritos:
+			req.session.user.getFavourites().then(function(quizesFavoritos) {
+				for(var j=0; j<quizes.length; i++) {
+					for(var k=0; k<quizesFavoritos.length; k++) {
+						if (quizesFavoritos[k].id === quizes[j].id)
+							quizes[j].isFavourite = true;
+					}
+				}
+				//mostrar lista
+				res.render('quizes/index', {quizes: quizes, errors: []});
+			}).catch(function(error) {next(error)});
+
 		}).catch(function(error) {next(error)});
 	}
 	else {
@@ -49,7 +59,17 @@ exports.index = function(req,res) {
 		if (req.user) options.where = {UserId: req.user.id};
 
 		models.Quiz.findAll(options).then(function (quizes) {
-			res.render('quizes/index.ejs', {quizes: quizes, errors: []});
+			//Comprobar si hay favoritos:
+			req.session.user.getFavourites().then(function(quizesFavoritos) {
+				for(var j=0; j<quizes.length; i++) {
+					for(var k=0; k<quizesFavoritos.length; k++) {
+						if (quizesFavoritos[k].id === quizes[j].id)
+							quizes[j].isFavourite = true;
+					}
+				}
+				//mostrar lista
+				res.render('quizes/index', {quizes: quizes, errors: []});
+			}).catch(function(error) {next(error)});
 		}).catch(function(error) {next(error)});
 	}
 };

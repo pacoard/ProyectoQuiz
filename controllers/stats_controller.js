@@ -8,16 +8,13 @@ exports.cargar = function(req,res) {
 	
 	models.Quiz.findAll().then(function (quizes){
 		models.Comment.findAll().then(function (comments) {
-			var nPreguntas = 0, 
-				nComments = 0, 
-				nMedioComments = 0, 
+			var nPreguntas = quizes.length, 
+				nComments = comments.length, 
+				nMedioComments = nComments/nPreguntas, 
 				nPreguntasSinComments = 0, 
 				nPreguntasConComments = 0;
 
-			nComments = comments.length;
-			nPreguntas = quizes.length;
-			nMedioComments = nComments/nPreguntas;
-
+			//Cálculo del número de preguntas con comentarios
 			for (var i=1; i<=nPreguntas; i++) {
 				for (var j=0; j<nComments; j++) {
 					if (comments[j].QuizId === i) {

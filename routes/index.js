@@ -60,5 +60,10 @@ router.get('/author', function(req, res) {
 var statsController = require('../controllers/stats_controller');
 router.get('/quizes/statistics', statsController.cargar);
 
+//Para los favoritos
+var favsController = require('../controllers/favourites_controller');
+router.get('/user/:userId(\\d+)/favourites', favsController.index);
+router.put('/user/:userId(\\d+)/favourites/:quizId(\\d+)', favsController.new);
+router.delete('/user/:userId(\\d+)/favourites/:quizId(\\d+)', favsController.delete);
 
 module.exports = router;

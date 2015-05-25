@@ -3,7 +3,7 @@
 <form method="get" action="/quizes">
 	Buscar: 
     <input type="text" name="busqueda" />
-    <input type="submit" value="Buscar" />
+    <button type="submit" value="Buscar"><img src="http://megaicons.net/static/img/icons_sizes/265/658/32/search-icon.png" style="width:auto; max-width:14px; height:auto;"></button>
 </form>
 
 <table>
@@ -22,8 +22,22 @@
 						<form method="post" action="/quizes/<%= quizes[i].id %>?_method=delete">
 							<button type="submit" onClick="return confirm('Borrar: <%= quizes[i].pregunta %>');">borrar</button>
 						</form>
-					</td>
+					</td>	
 				<% } %>
+				<% if(quizes[i].isFavourite) { %>
+						<td>
+							<form method="post" action="/user/<%= session.user.id%>/favourites/<%= quizes[i].id %>?_method=delete">
+								<button type="submit" 
+									onClick="return confirm('Desmarcar como favorito: <%= quizes[i].pregunta %>');"><img src="http://megaicons.net/static/img/icons_sizes/51/1538/16/favourites-star-sh-icon.png" ></button>
+							</form>
+						</td>
+					<% } else { %>
+						<td>
+							<form method="post" action="/user/<%= session.user.id%>/favourites/<%= quizes[i].id %>?_method=put">
+								<button type="submit" onClick="return confirm('Marcar como favorito: <%= quizes[i].pregunta %>');"><img src="http://megaicons.net/static/img/icons_sizes/325/841/16/star-empty-icon.png" ></button>
+							</form>
+						</td>
+					<% } %>
 				<!-- ///////////////////// -->
 			</tr>
 		<% } %>

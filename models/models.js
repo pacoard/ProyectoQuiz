@@ -45,6 +45,18 @@ Quiz.belongsTo(User);
 User.hasMany(Quiz);
 //---------------------------------------------------------
 
+//---------------------------------------------------------
+//Relaciones para los favoritos
+
+//creo que no hace falta crear la tabla intermedia
+/*var Favourites = sequelize.define('favourites', {
+	marked: Sequelize.BOOLEAN
+});
+*/
+User.belongsToMany(Quiz, {through: 'Favourites', as: "Favourites"});
+Quiz.belongsToMany(User, {through: 'Favourites', as: "Fans"});
+
+
 exports.Quiz = Quiz; //exportar la definición de tabla Quiz
 //se exporta para que la definición de la tabla Quiz pueda ser
 //usada en quiz_controller.js
