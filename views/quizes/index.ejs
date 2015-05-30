@@ -24,7 +24,7 @@
 						</form>
 					</td>	
 				<% } %>
-				<% if(quizes[i].isFavourite) { %>
+				<% if(quizes[i].isFav) { %>
 						<td>
 							<form method="post" action="/user/<%= session.user.id%>/favourites/<%= quizes[i].id %>?_method=delete">
 								<button type="submit" 

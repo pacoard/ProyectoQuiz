@@ -76,7 +76,7 @@ exports.update = function(req, res, next) {
 		if (err) 
 			res.render('user/' + req.user.id, {user: req.user, errors: err.errors});
 		else {// save: guarda campo username y password en DB
-			req.user .save( {fields: ["username", "password"]})
+			req.user.save( {fields: ["username", "password"]})
 			.then( function(){ res.redirect('/');});
 		} 
 	}).catch(function(error){next(error)});

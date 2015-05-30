@@ -30,7 +30,6 @@ exports.create = function(req, res) {
 		
 		var date = new Date();
 		req.session.seconds = date.getSeconds();
-		req.session.minutes = date.getMinutes();
 		
 		res.redirect(req.session.redir.toString());// redirección a path anterior a login
 	});

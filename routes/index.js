@@ -62,8 +62,8 @@ router.get('/quizes/statistics', statsController.cargar);
 
 //Para los favoritos
 var favsController = require('../controllers/favourites_controller');
-router.get('/user/:userId(\\d+)/favourites', favsController.index);
-router.put('/user/:userId(\\d+)/favourites/:quizId(\\d+)', favsController.new);
-router.delete('/user/:userId(\\d+)/favourites/:quizId(\\d+)', favsController.delete);
+router.get('/user/:userId(\\d+)/favourites',sessionController.loginRequired, favsController.index);
+router.put('/user/:userId(\\d+)/favourites/:quizId(\\d+)',sessionController.loginRequired, favsController.new, favsController.index);
+router.delete('/user/:userId(\\d+)/favourites/:quizId(\\d+)',sessionController.loginRequired, favsController.delete, favsController.index);
 
 module.exports = router;

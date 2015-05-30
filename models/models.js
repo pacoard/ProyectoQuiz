@@ -47,14 +47,8 @@ User.hasMany(Quiz);
 
 //---------------------------------------------------------
 //Relaciones para los favoritos
-
-//creo que no hace falta crear la tabla intermedia
-/*var Favourites = sequelize.define('favourites', {
-	marked: Sequelize.BOOLEAN
-});
-*/
-User.belongsToMany(Quiz, {through: 'Favourites', as: "Favourites"});
-Quiz.belongsToMany(User, {through: 'Favourites', as: "Fans"});
+User.belongsToMany(Quiz, { through: "Favs", as: "Favs" });
+Quiz.belongsToMany(User, { through: "Favs", as: "Favs" });
 
 
 exports.Quiz = Quiz; //exportar la definición de tabla Quiz
@@ -76,8 +70,10 @@ sequelize.sync().then(function() {
 					Quiz.count().then(function (count){
 						if(count === 0) {
 							Quiz.bulkCreate(
-								[ {pregunta: 'Capital de Italia', respuesta: 'Roma', UserId: 2}, // pertenecerán al usuario 2 (paco)
-								  {pregunta: 'Capital de Portugal', respuesta: 'Lisboa', UserId: 2}
+								[ {pregunta: '¿Contraseña del admin?', respuesta: '1234', UserId: 1},
+								  {pregunta: '¿Capital de Italia?', respuesta: 'Roma', UserId: 2}, // pertenecerán al usuario 2 (paco)
+								  {pregunta: '¿Capital de Portugal?', respuesta: 'Lisboa', UserId: 2},
+								  {pregunta: '¿Capital de Burkina Faso?', respuesta: 'Uagadugú', UserId: 2}
 								]).then(function(){
 									console.log('BBDD inicializada')});
 						};

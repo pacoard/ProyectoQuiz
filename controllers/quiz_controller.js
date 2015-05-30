@@ -29,6 +29,7 @@ exports.load = function(req,res,next,quizId) {
 exports.index = function(req,res, next) {
 	if (req.query.busqueda != null) {
 		var search = '%'+req.query.busqueda+'%'; //para buscar palabras intermedias
+		
 		models.Quiz.findAll({where: ["pregunta like ?", search]})
 		.then(function (quizes) {
 			//ordenar alfabéticamente
@@ -41,17 +42,20 @@ exports.index = function(req,res, next) {
 				}
 			}
 			//Comprobar si hay favoritos:
-			req.session.user.getFavourites().then(function(quizesFavoritos) {
-				for(var j=0; j<quizes.length; i++) {
-					for(var k=0; k<quizesFavoritos.length; k++) {
-						if (quizesFavoritos[k].id === quizes[j].id)
-							quizes[j].isFavourite = true;
+			if (req.session) {
+				models.User.find({ where: {id: Number(req.session.user.id)} })
+					.then(function(user) {
+						user.getFavs().then(function(quizesFavoritos) {
+							for (var i=0; i<quizes.length; i++) {
+								for(var j=0; j<quizesFavoritos.length; j++) { 
+									if (quizes[i].id === quizesFavoritos[j].id)
+										quizes[i].isFav = true;
+						}
 					}
-				}
-				//mostrar lista
-				res.render('quizes/index', {quizes: quizes, errors: []});
-			}).catch(function(error) {next(error)});
-
+						res.render('quizes/index', {quizes: quizes, errors: []});
+					}).catch(function(error) {next(error)});
+				}).catch(function(error) {next(error)});
+			}
 		}).catch(function(error) {next(error)});
 	}
 	else {
@@ -60,16 +64,36 @@ exports.index = function(req,res, next) {
 
 		models.Quiz.findAll(options).then(function (quizes) {
 			//Comprobar si hay favoritos:
-			req.session.user.getFavourites().then(function(quizesFavoritos) {
-				for(var j=0; j<quizes.length; i++) {
-					for(var k=0; k<quizesFavoritos.length; k++) {
-						if (quizesFavoritos[k].id === quizes[j].id)
-							quizes[j].isFavourite = true;
+			if (req.user) {
+				req.user.getFavs().then(function(quizesFavoritos) {
+					for (var i=0; i<quizes.length; i++) {
+						for(var j=0; j<quizesFavoritos.length; j++) { 
+							if (quizes[i].id === quizesFavoritos[j].id)
+								quizes[i].isFav = true;
+						}
 					}
-				}
-				//mostrar lista
+					res.render('quizes/index', {quizes: quizes, errors: []});
+				}).catch(function(error) {next(error)});
+			}
+			//Para detectar los favoritos de entre todas las preguntas
+			if (req.session.user) {
+				models.User.find({ where: {id: Number(req.session.user.id)} })
+					.then(function(user) {
+						user.getFavs().then(function(quizesFavoritos) {
+							for (var i=0; i<quizes.length; i++) {
+								for(var j=0; j<quizesFavoritos.length; j++) { 
+									if (quizes[i].id === quizesFavoritos[j].id)
+										quizes[i].isFav = true;
+						}
+					}
+						res.render('quizes/index', {quizes: quizes, errors: []});
+					}).catch(function(error) {next(error)});
+				}).catch(function(error) {next(error)});
+			}
+			//mostrar lista
+			else {
 				res.render('quizes/index', {quizes: quizes, errors: []});
-			}).catch(function(error) {next(error)});
+			}
 		}).catch(function(error) {next(error)});
 	}
 };
