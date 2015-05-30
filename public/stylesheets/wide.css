@@ -1,5 +1,5 @@
 
-body { background: #999; }
+body { background-image: url("../media/fondo.jpg");  }
 
 #page-wrap:after { content: "Wide Layout"; }
 

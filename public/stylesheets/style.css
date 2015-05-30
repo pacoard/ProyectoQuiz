@@ -2,14 +2,54 @@
 
 body { font: 16px Georgia, serif; }
 
-#page-wrap { margin: 2% auto; color: white; }
+#page-wrap {color: white; }
 #page-wrap > .main { border: 1px solid #999; padding: 1%;
 					 margin-bottom: 1px; color: black; }
 
 section > div { padding: 20px; }
-header, nav, section { background: #eee; text-align: center; }
+header, section { background: #eee; text-align: center; }
 footer { background: #eee; text-align: center; }
 nav span {margin: 0px 10px 0px 0px; }
+
+nav ul {
+	margin: 0px;
+	padding: 0px;
+	border-left-width: 1px;
+	border-left-style: solid;
+	border-left-color: #CCC;
+
+}
+
+nav ul li {
+	display: inline;
+}
+
+nav ul li a {
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 1.2em; 
+	color: #000;
+	display: block;
+	padding: 5px;
+	padding-right: 10px;
+	padding-left: 10px;
+	float: center;
+	background-color:#EAEAEA;
+	border-bottom-style: solid;
+	border-bottom-color: #CCC;
+	border-bottom-width: 2px;
+	border-top-style: solid;
+	border-top-color: #CCC;
+	border-top-width: 2px;
+	border-right-style: solid;
+	border-right-color: #CCC;
+	border-right-width: 2px;
+	border-left-style: solid;
+	border-left-color: #CCC;
+	border-left-width: 2px;
+	margin-left: auto;
+	margin-right: auto;
+}
 
 #ErrorMsgs {color: #f61; font-size: smaler}
 

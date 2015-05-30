@@ -34,15 +34,17 @@
     </header>
 
     <nav class="main" id="n1" role="navigation">
-      <span><a href="/">Inicio</a></span>
-      <span><a href="/quizes">Preguntas</a></span>
+      <ul> 
+      <li><a href="/">Inicio</a></li>
+      <li><a href="/quizes">Preguntas</a></li>
       <% if(session.user) { %>
-         <span><a href="/user/<%=session.user.id%>/quizes">Mis preguntas</a> </span>
-         <span><a href="/user/<%=session.user.id%>/favourites">Mis favoritas</a> </span>
+         <li><a href="/user/<%=session.user.id%>/quizes">Mis preguntas</a> </li>
+         <li><a href="/user/<%=session.user.id%>/favourites">Mis favoritas</a> </li>
 
       <%}%>
-      <span><a href="/quizes/statistics">Estadísticas</a></span>
-      <span><a href="/author">Autor</a></span>
+      <li><a href="/quizes/statistics">Estadísticas</a></li>
+      <li><a href="/author">Autor</a></li>
+      </ul>
     </nav>
 
     <section class="main" id="s1">
@@ -60,9 +62,10 @@
     </section>
 
     <footer class="main" id="f1">
-      <a href="http://es.wikipedia.org/wiki/Quiz">¿Qué es un Quiz?</a>
-      <p>
+      <p style="text-align: left;"><a href="http://es.wikipedia.org/wiki/Quiz">¿Qué es un Quiz?</a>
+       - 
       <a href="https://github.com/pacoard/ProyectoQuiz">Proyecto en Github</a>
+      <p style="text-align: right;">Francisco García de la Corte</p>
     </footer>
   </div>
   </body>
