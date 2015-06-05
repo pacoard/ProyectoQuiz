@@ -42,8 +42,24 @@ module.exports = function(sequelize, DataTypes) {
 			isAdmin: {
 				type: DataTypes.BOOLEAN,
 				defaultValue: false
-			}
 			},
+			//para el ranking de jugadores
+			aciertos: {
+				type: DataTypes.INTEGER,
+				defaultValue: 0
+			},
+
+			fallos: {
+				type: DataTypes.INTEGER,
+				defaultValue: 0
+			},
+
+			puntos: {
+				type: DataTypes.INTEGER,
+				defaultValue: 0
+			}
+
+		},
 			{ instanceMethods: {
 				verifyPassword: function (password) {
 					var encripted = crypto

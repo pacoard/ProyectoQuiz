@@ -65,6 +65,7 @@ sequelize.sync().then(function() {
 			User.bulkCreate(
 				[ {username: 'admin', password: '1234', isAdmin: true},
 				  {username: 'paco', password: '5678'} // isAdmin = false por defecto
+				  //valores de puntuación: todos a cero por defecto
 				]).then(function(){
 					console.log('BBDD inicializada');
 					Quiz.count().then(function (count){

@@ -10,17 +10,17 @@
 	
 	<%	for (var i=0; i<quizes.length; i++) { %>
 			<tr>
-				<td><a href="/quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a>
+				<td><a class="pregunta" href="/quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a>
 				</td>
 				<!-- Sólo con autorización -->
 				<% if(session.user) {
 				   if (session.user.isAdmin || session.user.id === quizes[i].UserId) { %>
 					<td><a href="/quizes/<%= quizes[i].id %>/edit">
-						<button>editar</button></a>
+						<button><img src="http://megaicons.net/static/img/icons_sizes/476/1668/16/edit-icon.png" ></button></a>
 					</td>
 					<td>
 						<form method="post" action="/quizes/<%= quizes[i].id %>?_method=delete">
-							<button type="submit" onClick="return confirm('Borrar: <%= quizes[i].pregunta %>');">borrar</button>
+							<button type="submit" onClick="return confirm('Borrar: <%= quizes[i].pregunta %>');"><img src="http://megaicons.net/static/img/icons_sizes/8/1331/16/delete-icon.png" ></button>
 						</form>
 					</td>	
 				<% } %>
@@ -34,7 +34,7 @@
 					<% } else { %>
 						<td>
 							<form method="post" action="/user/<%= session.user.id%>/favourites/<%= quizes[i].id %>?_method=put">
-								<button type="submit" onClick="return confirm('Marcar como favorito: <%= quizes[i].pregunta %>');"><img src="http://megaicons.net/static/img/icons_sizes/325/841/16/star-empty-icon.png" ></button>
+								<button type="submit"><img src="http://megaicons.net/static/img/icons_sizes/325/841/16/star-empty-icon.png" ></button>
 							</form>
 						</td>
 					<% } %>
@@ -48,5 +48,6 @@
 
 <!-- Sólo con autorización -->
 <% if (session.user) { %>
-	<a href="/quizes/new"><button type="button">Crear pregunta</button></a>
+	<br>
+	<a href="/quizes/new"><button type="button"><img src="http://megaicons.net/static/img/icons_sizes/532/2031/16/add-icon.png">  Crear pregunta</button></a>
 <% } %>

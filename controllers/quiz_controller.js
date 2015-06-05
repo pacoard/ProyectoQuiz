@@ -103,10 +103,45 @@ exports.show = function(req,res) { //para la lista de preguntas
 };
 
 exports.answer = function(req,res) {
-	if (req.query.respuesta === req.quiz.respuesta)
-		res.render('quizes/answer', {respuesta: 'Correcto', quizId: req.quiz.id, errors: []});
+	if (req.query.respuesta === req.quiz.respuesta) {
 		
-	else res.render('quizes/answer', {respuesta: 'Incorrecto', quizId: req.quiz.id, errors: []});
+		if(req.session.user) {//Actualizar puntuación del jugador
+				models.User.find({ where: {id: Number(req.session.user.id)} })
+				.then(function(user) {
+					user.aciertos++;
+					user.puntos+=3;
+					user.save({fields: ['aciertos', 'puntos']})
+					.then(function() {
+						console.log('Aciertos = ' + user.aciertos);
+						console.log('Fallos = ' + user.fallos);
+						console.log('Puntos = ' + user.puntos);
+						res.render('quizes/answer', {respuesta: 'Correcto', quizId: req.quiz.id, errors: []});
+					}).catch(function(error) {next(error)});
+				}).catch(function(error) {next(error)});
+		}
+		else
+			res.render('quizes/answer', {respuesta: 'Correcto', quizId: req.quiz.id, errors: []});
+	}
+		
+	else {
+
+		if(req.session.user) {//Actualizar puntuación del jugador
+				models.User.find({ where: {id: Number(req.session.user.id)} })
+				.then(function(user) {
+					user.fallos++;
+					user.puntos--;
+					user.save({fields: ['fallos', 'puntos']})
+					.then(function() {
+						console.log('Aciertos = ' + user.aciertos);
+						console.log('Fallos = ' + user.fallos);
+						console.log('Puntos = ' + user.puntos);
+						res.render('quizes/answer', {respuesta: 'Incorrecto', quizId: req.quiz.id, errors: []});
+					}).catch(function(error) {next(error)});
+				}).catch(function(error) {next(error)});
+		}
+		else
+			res.render('quizes/answer', {respuesta: 'Incorrecto', quizId: req.quiz.id, errors: []});
+	}
 };
 
 //Get /quizes/new -----para crear preguntas
@@ -157,7 +192,7 @@ exports.update = function(req, res) {
 			res.render('quizes/edit', {quiz: req.quiz, errors: err.errors});
 		else {
 			req.quiz // save: guarda campos pregunta y respuesta en DB
-			.save( {fields: ["pregunta", "respuesta", "imagesu"]})
+			.save( {fields: ["pregunta", "respuesta", "image"]})
 			.then( function(){ res.redirect('/quizes');});
 		} // Redirección HTTP a lista de preguntas (URL relativo)
 	}).catch(function(error){next(error)});
