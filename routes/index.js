@@ -59,6 +59,7 @@ router.get('/author', function(req, res) {
 //Página de estadísticas
 var statsController = require('../controllers/stats_controller');
 router.get('/quizes/statistics', statsController.cargar);
+router.get('/ranking', statsController.ranking);
 
 //Para los favoritos
 var favsController = require('../controllers/favourites_controller');

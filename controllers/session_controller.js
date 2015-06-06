@@ -1,6 +1,7 @@
 
 //AUTORIZACIÓN
 exports.loginRequired = function(req,res,next) {
+	console.log('req.session.redir = '+req.session.redir.toString());
 	if (req.session.user) next();
 	else res.redirect('/login');
 };

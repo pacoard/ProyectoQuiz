@@ -1,0 +1,33 @@
+<h3>Ránking de jugadores</h3>
+
+<br>
+ <table class="tabla">
+ 		<tr>
+          <th>Posición</th><th>Usuario</th><th>Aciertos</th><th>Fallos</th><th>Puntuación</th>
+        </tr>
+       
+        <% for (var i = 0; i<users.length; i++) { 
+        	if (i%2 !== 0) { %>
+        		<tr class="xx">
+        	<% } else { %>
+        		<tr>
+        		<% } if (session.user && (session.user.id === users[i].id)) { %>
+
+	        		<td style="background-color: blue; color: white;"><%=(i+1)%></td>
+	        		<td style="background-color: blue; color: white;"><%=users[i].username%></td>
+	          		<td style="background-color: blue; color: white;"><%=users[i].aciertos%></td>
+	          		<td style="background-color: blue; color: white;"><%=users[i].fallos%></td>
+	          		<td style="background-color: blue; color: white;"><%=users[i].puntos%></td>
+
+	          	<% } else { %>
+	          		<td><%=(i+1)%></td>
+	        		<td><%=users[i].username%></td>
+	          		<td><%=users[i].aciertos%></td>
+	          		<td><%=users[i].fallos%></td>
+	          		<td><%=users[i].puntos%></td>
+	          	<% } %>
+        </tr>
+
+        <% } %>
+        
+  </table>

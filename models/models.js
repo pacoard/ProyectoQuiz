@@ -64,17 +64,22 @@ sequelize.sync().then(function() {
 		if(count === 0) { 
 			User.bulkCreate(
 				[ {username: 'admin', password: '1234', isAdmin: true},
-				  {username: 'paco', password: '5678'} // isAdmin = false por defecto
+				  {username: 'paco', password: '5678'}, // isAdmin = false por defecto
+				  {username: 'user1', password: 'user1'},
+				  {username: 'user2', password: 'user2'},
+				  {username: 'user3', password: 'user3'},
+				  {username: 'user4', password: 'user4'},
+				  {username: 'user5', password: 'user5'},
 				  //valores de puntuación: todos a cero por defecto
 				]).then(function(){
 					console.log('BBDD inicializada');
 					Quiz.count().then(function (count){
 						if(count === 0) {
 							Quiz.bulkCreate(
-								[ {pregunta: '¿Contraseña del admin?', respuesta: '1234', UserId: 1},
-								  {pregunta: '¿Capital de Italia?', respuesta: 'Roma', UserId: 2}, // pertenecerán al usuario 2 (paco)
-								  {pregunta: '¿Capital de Portugal?', respuesta: 'Lisboa', UserId: 2},
-								  {pregunta: '¿Capital de Burkina Faso?', respuesta: 'Uagadugú', UserId: 2}
+								[ {pregunta: '¿Contraseña del admin?', respuesta: '1234', UserId: 1, image: 'admin.jpeg'},
+								  {pregunta: '¿Capital de Italia?', respuesta: 'Roma', UserId: 2, image: 'roma.jpeg'}, // pertenecerán al usuario 2 (paco)
+								  {pregunta: '¿Capital de Portugal?', respuesta: 'Lisboa', UserId: 2, image: 'portugal.png'},
+								  {pregunta: '¿Capital de Burkina Faso?', respuesta: 'Uagadugú', UserId: 2, image: 'burkinafaso.png'}
 								]).then(function(){
 									console.log('BBDD inicializada')});
 						};

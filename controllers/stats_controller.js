@@ -5,7 +5,6 @@ var models = require('../models/models.js'); //para acceder a la BBDD,
 
 //Cálculo de las estadísticas
 exports.cargar = function(req,res) {
-	
 	models.Quiz.findAll().then(function (quizes){
 		models.Comment.findAll().then(function (comments) {
 			var nPreguntas = quizes.length, 
@@ -15,9 +14,9 @@ exports.cargar = function(req,res) {
 				nPreguntasConComments = 0;
 
 			//Cálculo del número de preguntas con comentarios
-			for (var i=1; i<=nPreguntas; i++) {
+			for (var i=0; i<nPreguntas; i++) {
 				for (var j=0; j<nComments; j++) {
-					if (comments[j].QuizId === i) {
+					if (comments[j].QuizId === quizes[i].id) {
 						nPreguntasConComments++;
 						break;
 					}
@@ -35,6 +34,26 @@ exports.cargar = function(req,res) {
 					});
 		});
 	});
+};
 
 
+exports.ranking = function(req,res, next) {
+	models.User.findAll().then(function (users) {
+		//ordenar por puntuación
+		var done = false;
+		var aux;
+    	while (!done) {
+	        done = true;
+	        for (var i = 1; i<users.length; i++) {
+	            if (users[i-1].puntos < users[i].puntos) {
+	                done = false;
+	                aux = users[i-1];
+					users[i-1]=users[i];
+					users[i]=aux;
+	            }
+	        }
+   	 	}
+
+		res.render('user/ranking', {users: users, errors: []});
+	}).catch(function(error){next(error)});
 };

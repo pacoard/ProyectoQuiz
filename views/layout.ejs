@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>ProyectoQuiz</title>
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+    <link rel="shortcut icon" href="/media/favicon.ico" type="image/x-icon"/>
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <link type='text/css' rel='stylesheet' 
           media='only screen and (min-width: 530px) and (min-device-width: 481px)'
@@ -17,7 +17,6 @@
   <div id="page-wrap">
   <h1 id="titulo">Quiz: el juego de las preguntas</h1>
     <header>
-
       <div class="headerContainer">
        <% if(!session.user) { %>
 
@@ -43,6 +42,7 @@
          <li><a href="/user/<%=session.user.id%>/favourites">Mis favoritas</a> </li>
 
       <%}%>
+      <li><a href="/ranking">Ránking</a></li>
       <li><a href="/quizes/statistics">Estadísticas</a></li>
       <li><a href="/author">Autor</a></li>
       </ul>

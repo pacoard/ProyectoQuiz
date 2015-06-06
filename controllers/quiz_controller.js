@@ -27,6 +27,7 @@ exports.load = function(req,res,next,quizId) {
 
 //Get /quizes y /users/:userId/quizes
 exports.index = function(req,res, next) {
+	console.log('req.session.redir = '+req.session.redir.toString());
 	if (req.query.busqueda != null) {
 		var search = '%'+req.query.busqueda+'%'; //para buscar palabras intermedias
 		

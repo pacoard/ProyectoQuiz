@@ -10,6 +10,7 @@ exports.index = function(req,res, next) {
 };
 
 exports.new = function(req,res, next) {
+	console.log('req.session.redir = '+req.session.redir.toString());
 	req.user.addFav(req.quiz, {marked: true})
 		.then(function() {
 			console.log("----------marcado favorito---------");
@@ -18,6 +19,7 @@ exports.new = function(req,res, next) {
 };
 
 exports.delete = function(req,res, next) {
+	console.log('req.session.redir = '+req.session.redir.toString());
 	req.user.removeFav(req.quiz)
 		.then(function() {
 			console.log("----------desmarcado favorito---------");
