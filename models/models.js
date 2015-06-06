@@ -1,6 +1,6 @@
 //Construye la DB y el modelo.
 
-var path = require('path');
+var path = require('path'); 
 
 var pg = require('pg');
 
