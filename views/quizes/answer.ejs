@@ -1,12 +1,13 @@
 <p><%= respuesta %> <p>
 	<br>
-	<% if (session) { 
+	<% if (session.user) { 
 		if (respuesta==="Correcto") { %>
 			<p style="color: green"> ¡Has ganado 3 puntos! </p>
 			<br>
 		<% } else { %>
 			<p style="color: red"> Has perdido 1 punto </p>
 			<br>
-		<% }} %>
+		<% } %>
+	<% } %>
 	<a href="/quizes/<%= quizId %>">Inténtelo otra vez</a>
 </p>

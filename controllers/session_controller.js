@@ -30,7 +30,7 @@ exports.create = function(req, res) {
 		req.session.user = {id: user.id, username: user.username, isAdmin: user.isAdmin};
 		
 		var date = new Date();
-		req.session.seconds = date.getSeconds();
+		req.session.minutes = date.getMinutes();
 		
 		res.redirect(req.session.redir.toString());// redirección a path anterior a login
 	});

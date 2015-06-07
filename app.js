@@ -40,7 +40,7 @@ app.use(function(req,res,next) {
         var date = new Date();
         var diferenciaMin = date.getMinutes() - req.session.minutes; 
         //Se excede el tiempo límite
-        if(diferenciaMin >= 4642578) {
+        if(diferenciaMin >= 2) {
             delete req.session.user;
             res.redirect(req.session.redir.toString());
         }
@@ -59,8 +59,12 @@ app.use(function(req,res,next) {
     if (!req.session.redir)
         req.session.redir = '/';
     //guardar path en session.redir para despues del login
-    if (!req.path.match(/\/login|\/logout|\/user/))
+    //quizes/1/answer?respuesta=
+    if (!req.path.match(/\/login|\/logout|\/user/)
+        && !req.path.match(/\/(\\d+)\/favourites/)
+        && !req.path.match(/\/quizes\/(\\d+)\/answer?respuesta=(\\w)/))
         req.session.redir = req.path;
+    else req.session.redir = '/';
 
     //hacer visible req.session en las vistas
     res.locals.session = req.session;
